@@ -7,11 +7,14 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   isSuperAdmin: boolean;
+  isTuitionAdmin: boolean;
   isAdmin: boolean;
   isStaff: boolean;
   login: (username: string, password: string, selectedRole?: string) => Promise<void>;
   loginSuperAdmin: (username: string, password: string) => Promise<void>;
+  loginTuitionAdmin: (username: string, password: string) => Promise<void>;
   loginAdmin: (username: string, password: string) => Promise<void>;
+  loginStaff: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
@@ -24,7 +27,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const isSuperAdmin = user?.role === 'Super Admin' || user?.role === 'SUPER_ADMIN';
-  const isAdmin = user?.role === 'Admin' || user?.role === 'ADMIN';
+  const isTuitionAdmin =
+    user?.role === 'Tuition Operations Admin' ||
+    user?.role === 'Tuition Admin' ||
+    Boolean(user?.department?.toLowerCase().includes('tuition'));
+  const isAdmin = (user?.role === 'Admin' || user?.role === 'ADMIN') && !isTuitionAdmin;
   const isStaff =
     user?.role === 'Staff' ||
     user?.role === 'STAFF' ||
@@ -83,10 +90,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const loginTuitionAdmin = async (username: string, password: string) => {
+    setIsLoading(true);
+    try {
+      const res = await authService.loginTuitionAdmin(username, password);
+      if (res.user && res.token) {
+        setUser(res.user);
+        setToken(res.token);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const loginAdmin = async (username: string, password: string) => {
     setIsLoading(true);
     try {
       const res = await authService.loginAdmin(username, password);
+      if (res.user && res.token) {
+        setUser(res.user);
+        setToken(res.token);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loginStaff = async (username: string, password: string) => {
+    setIsLoading(true);
+    try {
+      const res = await authService.loginStaff(username, password);
       if (res.user && res.token) {
         setUser(res.user);
         setToken(res.token);
@@ -115,11 +148,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticated: !!user && !!token,
         isLoading,
         isSuperAdmin,
+        isTuitionAdmin,
         isAdmin,
         isStaff,
         login,
         loginSuperAdmin,
+        loginTuitionAdmin,
         loginAdmin,
+        loginStaff,
         logout,
         refreshUser,
       }}

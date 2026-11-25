@@ -271,7 +271,7 @@ export const CandidatesManagement: React.FC = () => {
                 Candidates
               </h1>
               <p style={{ margin: '4px 0 0 0', fontSize: 13, color: '#93c5fd' }}>
-                Manage all candidate accounts registered on LetGetIn.
+                Manage all candidate accounts registered on EduPye.
               </p>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 
-export type UserRoleType = 'Super Admin' | 'Admin' | 'Staff';
+export type UserRoleType = 'Super Admin' | 'Tuition Admin' | 'Admin' | 'Staff';
 
 interface UnifiedLoginPageProps {
   initialRole?: UserRoleType;
@@ -29,12 +29,25 @@ const ROLES: RoleConfig[] = [
     icon: 'fa-crown',
     activeColor: '#d97706',
     iconColor: '#d97706',
-    idLabel: 'Super Admin ID / username',
-    placeholder: 'e.g. labeeb.eee or SA-001',
+    idLabel: 'Super Admin ID / Username / Email',
+    placeholder: 'e.g. superadmin, superadmin@edupye.com, or SA-001',
     helperText: 'Full enterprise control, security audit & central governance',
-    demoUsername: 'labeeb.eee',
-    demoPassword: 'SuperAdmin@123',
-    demoLabel: 'labeeb.eee (SA-001)',
+    demoUsername: 'superadmin',
+    demoPassword: 'Password123!',
+    demoLabel: 'superadmin (SA-001)',
+  },
+  {
+    id: 'Tuition Admin',
+    label: 'Tuition Admin',
+    icon: 'fa-graduation-cap',
+    activeColor: '#7c3aed',
+    iconColor: '#7c3aed',
+    idLabel: 'Tuition Admin ID / Username / Email',
+    placeholder: 'e.g. tuitionadmin, tuitionadmin@edupye.com, or TAD-001',
+    helperText: 'EduPye Tuition operations, teacher verification, student codes & programs',
+    demoUsername: 'tuitionadmin',
+    demoPassword: 'Password123!',
+    demoLabel: 'tuitionadmin (TAD-001)',
   },
   {
     id: 'Admin',
@@ -42,12 +55,12 @@ const ROLES: RoleConfig[] = [
     icon: 'fa-user-shield',
     activeColor: '#2563eb',
     iconColor: '#2563eb',
-    idLabel: 'Admin ID / username',
-    placeholder: 'e.g. sarah.mitchell or ADM-101',
+    idLabel: 'Admin ID / Username / Email',
+    placeholder: 'e.g. admin, admin@edupye.com, or ADM-001',
     helperText: 'Departmental management, reporting & staff account oversight',
-    demoUsername: 'sarah.mitchell',
-    demoPassword: 'Admin@123',
-    demoLabel: 'sarah.mitchell (ADM-101)',
+    demoUsername: 'admin',
+    demoPassword: 'Password123!',
+    demoLabel: 'admin (ADM-001)',
   },
   {
     id: 'Staff',
@@ -55,12 +68,12 @@ const ROLES: RoleConfig[] = [
     icon: 'fa-user',
     activeColor: '#059669',
     iconColor: '#059669',
-    idLabel: 'Staff ID / username',
-    placeholder: 'e.g. john.manager or STF-101',
+    idLabel: 'Staff ID / Username / Email',
+    placeholder: 'e.g. staff, staff@edupye.com, or STF-001',
     helperText: 'Daily workflow execution, tasks, CRM & permitted enterprise tools',
-    demoUsername: 'john.manager',
-    demoPassword: 'Staff@123',
-    demoLabel: 'john.manager (STF-101)',
+    demoUsername: 'staff',
+    demoPassword: 'Password123!',
+    demoLabel: 'staff (STF-001)',
   },
 ];
 
@@ -68,7 +81,7 @@ export const UnifiedLoginPage: React.FC<UnifiedLoginPageProps> = ({
   initialRole = 'Staff',
   onSuccess,
 }) => {
-  const { login } = useAuth();
+  const { login, loginSuperAdmin, loginTuitionAdmin, loginAdmin, loginStaff } = useAuth();
 
   const [selectedRole, setSelectedRole] = useState<UserRoleType>(initialRole);
   const [username, setUsername] = useState<string>('');
@@ -114,7 +127,17 @@ export const UnifiedLoginPage: React.FC<UnifiedLoginPageProps> = ({
 
     try {
       setIsSubmitting(true);
-      await login(username.trim(), password, selectedRole);
+      if (selectedRole === 'Super Admin') {
+        await loginSuperAdmin(username.trim(), password);
+      } else if (selectedRole === 'Tuition Admin') {
+        await loginTuitionAdmin(username.trim(), password);
+      } else if (selectedRole === 'Admin') {
+        await loginAdmin(username.trim(), password);
+      } else if (selectedRole === 'Staff') {
+        await loginStaff(username.trim(), password);
+      } else {
+        await login(username.trim(), password, selectedRole);
+      }
       if (onSuccess) {
         onSuccess();
       } else {

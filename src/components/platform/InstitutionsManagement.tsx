@@ -264,7 +264,7 @@ export function InstitutionsManagement() {
                 Institutions
               </h1>
               <p style={{ margin: '4px 0 0 0', fontSize: 13, color: '#93c5fd' }}>
-                Manage all universities, colleges, and educational institutions registered on LetGetIn.
+                Manage all universities, colleges, and educational institutions registered on EduPye.
               </p>
             </div>
           </div>

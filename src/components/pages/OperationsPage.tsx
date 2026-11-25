@@ -116,7 +116,7 @@ export function OperationsPage({ initialTab = 'platform-management' }: Operation
             <div style={{ maxWidth: 760, position: 'relative', zIndex: 2 }}>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(6px)', padding: '4px 12px', borderRadius: 20, fontSize: 11.5, fontWeight: 700, marginBottom: 12 }}>
                 <i className="fas fa-shield-alt" />
-                LetGetIn User-Facing Platform Controls
+                EduPye User-Facing Platform Controls
               </div>
               <h2 style={{ fontSize: 24, fontWeight: 800, margin: '0 0 8px', letterSpacing: '-0.02em', color: '#ffffff' }}>
                 Platform Management Operations Hub

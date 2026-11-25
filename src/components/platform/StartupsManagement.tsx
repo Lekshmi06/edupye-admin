@@ -266,7 +266,7 @@ export function StartupsManagement() {
                 Startups
               </h1>
               <p style={{ margin: '4px 0 0 0', fontSize: 13, color: '#93c5fd' }}>
-                Manage all startup accounts, verification requests, and profiles registered on LetGetIn.
+                Manage all startup accounts, verification requests, and profiles registered on EduPye.
               </p>
             </div>
           </div>

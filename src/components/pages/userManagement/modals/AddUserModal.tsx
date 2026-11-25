@@ -7,7 +7,7 @@ import { ModuleAccessSelector } from '../components/ModuleAccessSelector';
 interface AddUserModalProps {
   isOpen: boolean;
   isSuperAdmin: boolean;
-  defaultRole?: 'Admin' | 'Staff';
+  defaultRole?: 'Admin' | 'Tuition Operations Admin' | 'Staff';
   onClose: () => void;
   onUserCreated: (newUser: UserAccount) => void;
 }
@@ -19,7 +19,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
   onClose,
   onUserCreated,
 }) => {
-  const [role, setRole] = useState<'Admin' | 'Staff'>(isSuperAdmin ? defaultRole : 'Staff');
+  const [role, setRole] = useState<'Admin' | 'Tuition Operations Admin' | 'Staff'>(isSuperAdmin ? defaultRole : 'Staff');
   const [userId, setUserId] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [username, setUsername] = useState('');
@@ -39,7 +39,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
   };
 
   const handleAutoSuggestUserId = () => {
-    const prefix = role === 'Admin' ? 'ADM' : 'STF';
+    const prefix = role === 'Admin' ? 'ADM' : role === 'Tuition Operations Admin' ? 'TAD' : 'STF';
     const rand = Math.floor(100 + Math.random() * 900);
     setUserId(`${prefix}-${rand}`);
   };
@@ -63,7 +63,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
         role: isSuperAdmin ? role : 'Staff',
         department: department.trim(),
         password,
-        allowedModules: role === 'Staff' ? allowedModules : undefined,
+        allowedModules: role === 'Tuition Operations Admin' && allowedModules.length === 0 ? [1, 2, 3, 4, 5, 33] : allowedModules,
       });
 
       onUserCreated(newUser);
@@ -189,24 +189,28 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
               Account Role
             </label>
             {isSuperAdmin ? (
-              <div style={{ display: 'flex', gap: '12px' }}>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                 <button
                   type="button"
-                  onClick={() => setRole('Admin')}
+                  onClick={() => {
+                    setRole('Admin');
+                    setDepartment('Operations');
+                    handleAutoSuggestUserId();
+                  }}
                   style={{
-                    flex: 1,
-                    padding: '10px 14px',
+                    flex: '1 1 120px',
+                    padding: '10px 12px',
                     borderRadius: '8px',
                     border: role === 'Admin' ? '2px solid #0265c2' : '1px solid #cbd5e1',
                     background: role === 'Admin' ? '#eff6ff' : '#ffffff',
                     color: role === 'Admin' ? '#0265c2' : '#64748b',
                     fontWeight: 600,
-                    fontSize: '13px',
+                    fontSize: '12.5px',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '8px',
+                    gap: '6px',
                   }}
                 >
                   <i className="fas fa-user-shield" />
@@ -214,21 +218,53 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                 </button>
                 <button
                   type="button"
-                  onClick={() => setRole('Staff')}
+                  onClick={() => {
+                    setRole('Tuition Operations Admin');
+                    setDepartment('Tuition Operations');
+                    setAllowedModules([1, 2, 3, 4, 5, 33]);
+                    const rand = Math.floor(100 + Math.random() * 900);
+                    setUserId(`TAD-${rand}`);
+                  }}
                   style={{
-                    flex: 1,
-                    padding: '10px 14px',
+                    flex: '1 1 140px',
+                    padding: '10px 12px',
+                    borderRadius: '8px',
+                    border: role === 'Tuition Operations Admin' ? '2px solid #7c3aed' : '1px solid #cbd5e1',
+                    background: role === 'Tuition Operations Admin' ? '#f5f3ff' : '#ffffff',
+                    color: role === 'Tuition Operations Admin' ? '#7c3aed' : '#64748b',
+                    fontWeight: 600,
+                    fontSize: '12.5px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                  }}
+                >
+                  <i className="fas fa-graduation-cap" />
+                  Tuition Admin
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setRole('Staff');
+                    setDepartment('Operations');
+                    handleAutoSuggestUserId();
+                  }}
+                  style={{
+                    flex: '1 1 120px',
+                    padding: '10px 12px',
                     borderRadius: '8px',
                     border: role === 'Staff' ? '2px solid #0265c2' : '1px solid #cbd5e1',
                     background: role === 'Staff' ? '#eff6ff' : '#ffffff',
                     color: role === 'Staff' ? '#0265c2' : '#64748b',
                     fontWeight: 600,
-                    fontSize: '13px',
+                    fontSize: '12.5px',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '8px',
+                    gap: '6px',
                   }}
                 >
                   <i className="fas fa-user" />
@@ -395,8 +431,8 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
             />
           </div>
 
-          {/* Module Access Configuration for Staff */}
-          {role === 'Staff' && (
+          {/* Module Access Configuration for Staff, Tuition Admin, or Admin */}
+          {(role === 'Staff' || role === 'Tuition Operations Admin' || (isSuperAdmin && role === 'Admin')) && (
             <div style={{ marginBottom: '20px' }}>
               <ModuleAccessSelector
                 isSuperAdmin={isSuperAdmin}

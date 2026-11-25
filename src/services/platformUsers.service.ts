@@ -105,7 +105,7 @@ const INITIAL_CANDIDATES: CandidateUser[] = [
     registrationDate: '2026-09-02',
     bio: 'Senior DevOps and Cloud Infrastructure architect specializing in automated multi-cloud deployments and reliability.',
     recentActivity: [
-      { id: 'act-6', action: 'Registered on LetGetIn platform', timestamp: '2026-09-02 09:12 AM' },
+      { id: 'act-6', action: 'Registered on EduPye platform', timestamp: '2026-09-02 09:12 AM' },
       { id: 'act-7', action: 'Submitted KYC & Identity Documents', timestamp: '2026-09-02 09:30 AM' },
     ],
   },
@@ -261,7 +261,7 @@ const INITIAL_STARTUPS: StartupUser[] = [
     verificationStatus: 'Verified',
     registrationDate: '2026-08-10',
     recentActivity: [
-      { id: 'act-201', action: 'Verified by LetGetIn Compliance Desk', timestamp: '2026-08-12 04:30 PM', user: 'Admin' },
+      { id: 'act-201', action: 'Verified by EduPye Compliance Desk', timestamp: '2026-08-12 04:30 PM', user: 'Admin' },
       { id: 'act-202', action: 'Posted 6 New Software Engineering Jobs', timestamp: '2026-09-04 11:00 AM' },
     ],
   },
@@ -926,7 +926,7 @@ export const platformUsersService = {
       verificationStatus: startup.verificationStatus || 'Pending',
       registrationDate: new Date().toISOString().split('T')[0],
       recentActivity: [
-        { id: `act-${Date.now()}`, action: 'Startup registered on LetGetIn', timestamp: new Date().toLocaleString(), user: 'Admin' },
+        { id: `act-${Date.now()}`, action: 'Startup registered on EduPye', timestamp: new Date().toLocaleString(), user: 'Admin' },
       ],
     };
     startupsData = [newStartup, ...startupsData];
@@ -1178,7 +1178,7 @@ export const platformUsersService = {
       verificationStatus: inst.verificationStatus || 'Pending',
       registrationDate: new Date().toISOString().split('T')[0],
       recentActivity: [
-        { id: `act-${Date.now()}`, action: 'Institution registered on LetGetIn', timestamp: new Date().toLocaleString(), user: 'Admin' },
+        { id: `act-${Date.now()}`, action: 'Institution registered on EduPye', timestamp: new Date().toLocaleString(), user: 'Admin' },
       ],
     };
     institutionsData = [newInst, ...institutionsData];

@@ -298,7 +298,7 @@ export const INITIAL_INTERVIEW_RECORDS: InterviewRecord[] = [
     format: 'Video Conference',
     status: 'Scheduled',
     notes: 'Candidate has published 4 CVPR papers in vision-language alignment. Focus on GPU cluster optimization.',
-    meetingLink: 'https://meet.letgetin.com/room/openai-lin-902'
+    meetingLink: 'https://meet.edupye.com/room/openai-lin-902'
   },
   {
     id: 'int-102',
@@ -314,7 +314,7 @@ export const INITIAL_INTERVIEW_RECORDS: InterviewRecord[] = [
     format: 'Live Sandbox',
     status: 'Scheduled',
     notes: 'Live distributed lock idempotency challenge in Go/Node.js.',
-    meetingLink: 'https://sandbox.letgetin.com/session/stripe-sharma-411'
+    meetingLink: 'https://sandbox.edupye.com/session/stripe-sharma-411'
   },
   {
     id: 'int-103',
@@ -364,7 +364,7 @@ export const INITIAL_INTERVIEW_RECORDS: InterviewRecord[] = [
     format: 'Live Sandbox',
     status: 'Scheduled',
     notes: 'Will construct a live dynamic perturbation widget in React 19.',
-    meetingLink: 'https://sandbox.letgetin.com/session/anthropic-verma-782'
+    meetingLink: 'https://sandbox.edupye.com/session/anthropic-verma-782'
   },
   {
     id: 'int-106',
@@ -380,7 +380,7 @@ export const INITIAL_INTERVIEW_RECORDS: InterviewRecord[] = [
     format: 'Video Conference',
     status: 'In Progress',
     notes: 'Live fullstack coding & state management live test.',
-    meetingLink: 'https://meet.letgetin.com/room/calicut-menon-118'
+    meetingLink: 'https://meet.edupye.com/room/calicut-menon-118'
   },
   {
     id: 'int-107',

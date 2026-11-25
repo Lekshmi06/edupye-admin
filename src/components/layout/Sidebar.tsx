@@ -150,7 +150,7 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
                       )}
                     </a>
 
-                    {/* CMS Submenu: Explore Opportunities */}
+                    {/* CMS Submenu: Landing Page Studio & Explore Opportunities */}
                     {isSubmenuVisible && (
                       <div
                         className="sidebar-submenu"
@@ -166,6 +166,35 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
                           position: 'relative'
                         }}
                       >
+                        <a
+                          href="#"
+                          className={`menu-item submenu-item${activeModuleId === 7 ? ' active' : ''}`}
+                          title="Landing Page Studio"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            onSelectModule(7);
+                          }}
+                          style={{
+                            fontSize: 12.5,
+                            padding: '7px 10px',
+                            borderRadius: 8,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 8,
+                            position: 'relative'
+                          }}
+                        >
+                          <i
+                            className="fas fa-desktop"
+                            style={{
+                              fontSize: 13,
+                              width: 16,
+                              color: activeModuleId === 7 ? '#2563eb' : '#7a8aa0'
+                            }}
+                          />
+                          <span className="menu-label">Landing Page Studio</span>
+                        </a>
+
                         <a
                           href="#"
                           className={`menu-item submenu-item${activeModuleId === 55 ? ' active' : ''}`}
@@ -201,6 +230,7 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
               }
 
               const isExternal = item.id === 11;
+              const isAcademy = item.id === 33;
               const externalHref = isExternal ? (import.meta.env.VITE_HUREMASO_URL || 'http://localhost:5173') : '#';
 
               return (
@@ -210,19 +240,26 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
                   target={isExternal ? '_blank' : undefined}
                   rel={isExternal ? 'noopener noreferrer' : undefined}
                   className={`menu-item${item.id === activeModuleId ? ' active' : ''}`}
-                  title={collapsed ? (isExternal ? `${item.name} (Opens in new tab)` : item.name) : undefined}
+                  title={collapsed ? (isAcademy ? 'EduPye Academy — Tuition Management System' : isExternal ? `${item.name} (Opens in new tab)` : item.name) : undefined}
                   onClick={(e) => {
                     e.preventDefault();
                     onSelectModule(item.id);
                   }}
                 >
                   <i className={`fas ${item.icon || 'fa-circle'}`} />
-                  <span className="menu-label" style={isExternal ? { display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' } : undefined}>
-                    <span>{item.name}</span>
-                    {isExternal && !collapsed && (
-                      <i className="fas fa-external-link-alt" style={{ fontSize: '10px', opacity: 0.65, marginLeft: '6px' }} />
-                    )}
-                  </span>
+                  {isAcademy && !collapsed ? (
+                    <span className="menu-label" style={{ display: 'flex', flexDirection: 'column', gap: 1, lineHeight: 1.15 }}>
+                      <span style={{ fontWeight: 600 }}>{item.name}</span>
+                      <span style={{ fontSize: '10.5px', color: '#64748b', fontWeight: 500 }}>Tuition Management System</span>
+                    </span>
+                  ) : (
+                    <span className="menu-label" style={isExternal ? { display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' } : undefined}>
+                      <span>{item.name}</span>
+                      {isExternal && !collapsed && (
+                        <i className="fas fa-external-link-alt" style={{ fontSize: '10px', opacity: 0.65, marginLeft: '6px' }} />
+                      )}
+                    </span>
+                  )}
                 </a>
               );
             })

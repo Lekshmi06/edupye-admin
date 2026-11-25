@@ -3,10 +3,9 @@
  * Resolves API Base URL for local development and production.
  */
 export const API_BASE_URL: string = (() => {
-  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-    return 'http://localhost:5000';
+  const envUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL;
+  if (envUrl && typeof envUrl === 'string' && envUrl.trim()) {
+    return envUrl.trim().replace(/\/api\/?$/, '').replace(/\/+$/, '');
   }
-  return (import.meta.env.VITE_API_URL || 'http://localhost:5000')
-    .replace(/\/api\/?$/, '')
-    .replace(/\/+$/, '');
+  return 'http://localhost:5000';
 })();

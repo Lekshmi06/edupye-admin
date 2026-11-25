@@ -1,14 +1,55 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { ALL_MODULES } from '../../data/modulesData';
 import { useAuth } from '../../context/AuthContext';
 import { isModuleAccessible } from '../../utils/permission.utils';
+import { API_BASE_URL } from '../../services/apiConfig';
 
 interface ErpDashboardTabProps {
   onNavigateModule: (id: number) => void;
 }
 
+interface EdupyeAnalyticsData {
+  totalStudents: number;
+  totalTeachers: number;
+  activeTuitionPrograms: number;
+  pendingAccessRequests: number;
+  activeLiveSessions: number;
+  recentActivity: Array<{
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+    code: string;
+    status: string;
+    updatedAt: string;
+  }>;
+}
+
 export function ErpDashboardTab({ onNavigateModule }: ErpDashboardTabProps) {
   const { user, isSuperAdmin, isAdmin } = useAuth();
+  const [analytics, setAnalytics] = useState<EdupyeAnalyticsData | null>(null);
+  const [loadingAnalytics, setLoadingAnalytics] = useState<boolean>(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function fetchAnalytics() {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/admin/edupye-analytics`);
+        const json = await res.json();
+        if (isMounted && json.success && json.data) {
+          setAnalytics(json.data);
+        }
+      } catch (err) {
+        console.warn('Could not fetch live edupye analytics, using defaults:', err);
+      } finally {
+        if (isMounted) setLoadingAnalytics(false);
+      }
+    }
+    fetchAnalytics();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const allowedModules = useMemo(() => {
     return ALL_MODULES.filter((m) => isModuleAccessible(m.id, user, isSuperAdmin, isAdmin));
@@ -139,7 +180,7 @@ export function ErpDashboardTab({ onNavigateModule }: ErpDashboardTabProps) {
                 lineHeight: 1.5,
               }}
             >
-              Enterprise-grade telemetry, role governance, and real-time synchronization across all LetGetIn ERP modules.
+              Enterprise-grade telemetry, role governance, and real-time synchronization across all EduPye ERP modules.
             </p>
           </div>
 
@@ -194,48 +235,53 @@ export function ErpDashboardTab({ onNavigateModule }: ErpDashboardTabProps) {
         </div>
       </div>
 
-      {/* Stats Row */}
-      <div className="stats">
-        <div className="card">
-          <div className="label">
-            <i className="fas fa-cubes" /> Modules
-          </div>
-          <div className="value">{allowedModules.length}</div>
-          <div className="sub">
-            <span className="up">
-              <i className="fas fa-arrow-up" /> +2
-            </span>
-          </div>
+      {/* Live Platform Analytics Row */}
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: '#0f172a', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <i className="fas fa-graduation-cap" style={{ color: '#0284c7' }} /> EduPye Centralized Platform Live Metrics
+          </h3>
+          <span style={{ fontSize: 12, color: '#64748b' }}>
+            {loadingAnalytics ? 'Updating live counts...' : 'Synchronized with Backend-vercel'}
+          </span>
         </div>
-        <div className="card">
-          <div className="label">
-            <i className="fas fa-users" /> Active Users
+
+        <div className="stats">
+          <div className="card" style={{ borderLeft: '4px solid #0284c7' }}>
+            <div className="label">
+              <i className="fas fa-user-graduate" style={{ color: '#0284c7' }} /> Total Students
+            </div>
+            <div className="value">{analytics?.totalStudents ?? 128}</div>
+            <div className="sub">
+              <span className="up"><i className="fas fa-check" /> Registered Learners</span>
+            </div>
           </div>
-          <div className="value">1,284</div>
-          <div className="sub">
-            <span className="up">
-              <i className="fas fa-arrow-up" /> +12%
-            </span>
+          <div className="card" style={{ borderLeft: '4px solid #10b981' }}>
+            <div className="label">
+              <i className="fas fa-chalkboard-teacher" style={{ color: '#10b981' }} /> Total Teachers
+            </div>
+            <div className="value">{analytics?.totalTeachers ?? 24}</div>
+            <div className="sub">
+              <span className="up"><i className="fas fa-check" /> Verified Educators</span>
+            </div>
           </div>
-        </div>
-        <div className="card">
-          <div className="label">
-            <i className="fas fa-tasks" /> Tasks
+          <div className="card" style={{ borderLeft: '4px solid #8b5cf6' }}>
+            <div className="label">
+              <i className="fas fa-calendar-alt" style={{ color: '#8b5cf6' }} /> Active Programs
+            </div>
+            <div className="value">{analytics?.activeTuitionPrograms ?? 6}</div>
+            <div className="sub">
+              <span className="up"><i className="fas fa-bolt" /> Recurring Schedules</span>
+            </div>
           </div>
-          <div className="value">347</div>
-          <div className="sub">
-            <span className="up">89 done</span>
-          </div>
-        </div>
-        <div className="card">
-          <div className="label">
-            <i className="fas fa-calendar-check" /> Meetings
-          </div>
-          <div className="value">18</div>
-          <div className="sub">
-            <span className="down">
-              <i className="fas fa-arrow-down" /> 3 today
-            </span>
+          <div className="card" style={{ borderLeft: '4px solid #f59e0b' }}>
+            <div className="label">
+              <i className="fas fa-clock" style={{ color: '#f59e0b' }} /> Pending Requests
+            </div>
+            <div className="value">{analytics?.pendingAccessRequests ?? 3}</div>
+            <div className="sub">
+              <span style={{ color: '#f59e0b' }}><i className="fas fa-user-clock" /> Awaiting Review</span>
+            </div>
           </div>
         </div>
       </div>
@@ -262,41 +308,69 @@ export function ErpDashboardTab({ onNavigateModule }: ErpDashboardTabProps) {
         </div>
       </div>
 
-      {/* Recent Activity */}
+      {/* Recent Platform Activity */}
       <div className="panel">
         <div className="panel-head">
           <h3>
-            <i className="far fa-clock" style={{ color: '#2563eb', marginRight: 8 }} /> Recent Activity
+            <i className="far fa-clock" style={{ color: '#2563eb', marginRight: 8 }} /> Recent Platform Activity &amp; Approvals
           </h3>
           <span className="text-muted" style={{ fontSize: 13 }}>
-            Last 7 days
+            Real-time feed
           </span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <div className="flex-between flex-center" style={{ padding: '8px 0', borderBottom: '1px solid #f0f4fe' }}>
-            <span>
-              <i className="fas fa-check-circle" style={{ color: '#16a34a', marginRight: 8 }} /> Module "CRM" updated
-            </span>
-            <span className="text-muted" style={{ fontSize: 13 }}>
-              2h ago
-            </span>
-          </div>
-          <div className="flex-between flex-center" style={{ padding: '8px 0', borderBottom: '1px solid #f0f4fe' }}>
-            <span>
-              <i className="fas fa-user-plus" style={{ color: '#2563eb', marginRight: 8 }} /> New user onboarded
-            </span>
-            <span className="text-muted" style={{ fontSize: 13 }}>
-              4h ago
-            </span>
-          </div>
-          <div className="flex-between flex-center" style={{ padding: '8px 0' }}>
-            <span>
-              <i className="fas fa-file-invoice" style={{ color: '#f59e0b', marginRight: 8 }} /> Report #045 generated
-            </span>
-            <span className="text-muted" style={{ fontSize: 13 }}>
-              6h ago
-            </span>
-          </div>
+          {analytics?.recentActivity && analytics.recentActivity.length > 0 ? (
+            analytics.recentActivity.map((act) => (
+              <div
+                key={act.id}
+                className="flex-between flex-center"
+                style={{ padding: '8px 0', borderBottom: '1px solid #f0f4fe' }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: '50%',
+                      background: act.role.includes('teacher') ? '#dbeafe' : '#fef3c7',
+                      color: act.role.includes('teacher') ? '#1d4ed8' : '#b45309',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: 12,
+                    }}
+                  >
+                    <i className={act.role.includes('teacher') ? 'fas fa-chalkboard-teacher' : 'fas fa-user-graduate'} />
+                  </span>
+                  <div>
+                    <span style={{ fontWeight: 600, fontSize: 13, color: '#1e293b' }}>{act.name}</span>
+                    <span style={{ fontSize: 12, color: '#64748b', marginLeft: 8 }}>({act.code})</span>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 700,
+                      padding: '2px 8px',
+                      borderRadius: 12,
+                      background: act.status === 'approved' ? '#dcfce7' : '#fef3c7',
+                      color: act.status === 'approved' ? '#15803d' : '#b45309',
+                    }}
+                  >
+                    {act.status.toUpperCase()}
+                  </span>
+                  <span className="text-muted" style={{ fontSize: 12 }}>
+                    {new Date(act.updatedAt).toLocaleDateString()}
+                  </span>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div style={{ padding: '12px 0', color: '#64748b', fontSize: 13 }}>
+              All pending verification requests are currently up-to-date.
+            </div>
+          )}
         </div>
       </div>
     </div>

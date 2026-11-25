@@ -71,7 +71,7 @@ export const CmsHeader: React.FC<CmsHeaderProps> = ({
           </span>
         </div>
         <p style={{ margin: 0, fontSize: 13, color: '#bae6fd' }}>
-          Manage and publish dynamic content for the LetGetIn public landing page with real database persistence.
+          Manage and publish dynamic content for the EduPye public landing page with real database persistence.
         </p>
       </div>
 

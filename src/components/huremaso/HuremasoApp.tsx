@@ -4,7 +4,6 @@ import { Button } from '../common/Button';
 import { Loader } from '../common/Loader';
 import { ModuleDetailPage } from '../pages/ModuleDetailPage';
 import { ALL_MODULES } from '../../data/modulesData';
-import { App as HuremasoCoreApp } from '@huremaso/App';
 import '../../styles/huremaso-scoped.css';
 
 interface HuremasoAppProps {
@@ -110,7 +109,7 @@ export const HuremasoApp: React.FC<HuremasoAppProps> = ({ onNavigateDashboard })
               </span>
             </div>
             <div style={{ fontSize: '12px', color: '#64748b' }}>
-              LETGETIN ERP Enterprise · Human Resource Management System & AI Automation
+              EDUPYE ERP Enterprise · Human Resource Management System & AI Automation
             </div>
           </div>
         </div>

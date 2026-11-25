@@ -110,6 +110,12 @@ const ResumeManagementPage = lazy(() =>
 const PlatformManagementPage = lazy(() =>
   import('./components/pages/PlatformManagementPage').then((m) => ({ default: m.PlatformManagementPage }))
 );
+const EdupyeTuitionAdminPage = lazy(() =>
+  import('./components/tuition/EdupyeTuitionAdminPage').then((m) => ({ default: m.EdupyeTuitionAdminPage }))
+);
+const EduPyeAcademyLayout = lazy(() =>
+  import('./components/academy/EduPyeAcademyLayout').then((m) => ({ default: m.EduPyeAcademyLayout }))
+);
 
 function AppShell() {
   const {
@@ -142,16 +148,16 @@ function AppShell() {
     [filteredNonSpecialModules, isAllowed],
   );
 
-  // If active module is not allowed for Staff, automatically redirect to their first permitted module
+  // If active module is not allowed, automatically redirect to their first permitted module
   useEffect(() => {
-    if (isStaff && !isAllowed(activeModuleId)) {
+    if (!isSuperAdmin && !isAllowed(activeModuleId)) {
       const allModulesList = [...specialModules, ...filteredNonSpecialModules];
       const firstAllowed = allModulesList.find((m) => isAllowed(m.id));
       if (firstAllowed && firstAllowed.id !== activeModuleId) {
         navigateTo(firstAllowed.id);
       }
     }
-  }, [isStaff, isAllowed, activeModuleId, specialModules, filteredNonSpecialModules, navigateTo]);
+  }, [isSuperAdmin, isAllowed, activeModuleId, specialModules, filteredNonSpecialModules, navigateTo]);
 
   const handleSelectModule = useCallback(
     (id: number) => {
@@ -253,6 +259,8 @@ function AppShell() {
         return <CustomerCarePage onNavigateDashboard={() => navigateTo(1)} />;
       case 54:
         return <HelpDeskPage onNavigateDashboard={() => navigateTo(1)} />;
+      case 33:
+        return <EduPyeAcademyLayout onNavigateDashboard={() => navigateTo(1)} />;
       case 38:
         return <StartupsPage />;
       case 39:
@@ -287,6 +295,14 @@ function AppShell() {
       default:
         return <ModuleDetailPage key={activeModule.id} module={activeModule} />;
     }
+  }
+
+  if (activeModuleId === 33) {
+    return (
+      <Suspense fallback={<Loader label="Loading EduPye Academy..." />}>
+        <EduPyeAcademyLayout onNavigateDashboard={() => navigateTo(1)} />
+      </Suspense>
+    );
   }
 
   return (
@@ -346,6 +362,15 @@ function MainRouter() {
     return (
       <UnifiedLoginPage
         initialRole="Super Admin"
+        onSuccess={() => navigateToPath('/')}
+      />
+    );
+  }
+
+  if (currentPath === '/tuition-admin/login' || currentPath === '/tuition-admin') {
+    return (
+      <UnifiedLoginPage
+        initialRole="Tuition Admin"
         onSuccess={() => navigateToPath('/')}
       />
     );

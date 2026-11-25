@@ -3,8 +3,13 @@ import { ALL_MODULES, NON_SPECIAL_MODULES, SPECIAL_MODULES } from '../data/modul
 
 export function useErpNavigation(initialModuleId: number = 1) {
   const getInitialModuleId = () => {
-    if (typeof window !== 'undefined' && window.location.pathname.startsWith('/huremaso')) {
-      return 11;
+    if (typeof window !== 'undefined') {
+      if (window.location.pathname.startsWith('/huremaso')) {
+        return 11;
+      }
+      if (window.location.pathname.startsWith('/academy')) {
+        return 33;
+      }
     }
     return initialModuleId;
   };
@@ -19,8 +24,14 @@ export function useErpNavigation(initialModuleId: number = 1) {
         if (!window.location.pathname.startsWith('/huremaso')) {
           window.history.pushState({}, '', '/huremaso');
         }
-      } else if (window.location.pathname.startsWith('/huremaso')) {
-        window.history.pushState({}, '', '/');
+      } else if (id === 33) {
+        if (!window.location.pathname.startsWith('/academy')) {
+          window.history.pushState({}, '', '/academy/dashboard');
+        }
+      } else {
+        if (window.location.pathname.startsWith('/huremaso') || window.location.pathname.startsWith('/academy')) {
+          window.history.pushState({}, '', '/');
+        }
       }
     }
   }, []);
@@ -30,8 +41,10 @@ export function useErpNavigation(initialModuleId: number = 1) {
     const handlePopState = () => {
       if (window.location.pathname.startsWith('/huremaso')) {
         setActiveModuleId(11);
+      } else if (window.location.pathname.startsWith('/academy')) {
+        setActiveModuleId(33);
       } else if (window.location.pathname === '/' || window.location.pathname === '') {
-        setActiveModuleId((prev) => (prev === 11 ? 1 : prev));
+        setActiveModuleId((prev) => (prev === 11 || prev === 33 ? 1 : prev));
       }
     };
     window.addEventListener('popstate', handlePopState);

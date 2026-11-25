@@ -81,7 +81,7 @@ export function InterviewManagement() {
       format: 'Video Conference',
       status: 'Scheduled',
       notes: 'Initial technical competency evaluation.',
-      meetingLink: 'https://meet.letgetin.com/room/letgetin-session-new'
+      meetingLink: 'https://meet.edupye.com/room/session-new'
     });
     setIsFormModalOpen(true);
   };
@@ -642,7 +642,7 @@ export function InterviewManagement() {
                   type="text"
                   value={formData.meetingLink || ''}
                   onChange={(e) => setFormData({ ...formData, meetingLink: e.target.value })}
-                  placeholder="https://meet.letgetin.com/room/..."
+                  placeholder="https://meet.edupye.com/room/..."
                   style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid #cbd5e1', fontSize: 12.5 }}
                 />
               </div>

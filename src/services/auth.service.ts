@@ -97,6 +97,24 @@ export const authService = {
     return data;
   },
 
+  async loginTuitionAdmin(username: string, password: string): Promise<LoginResponse> {
+    const res = await fetch(`${API_BASE_URL}/api/auth/tuition-admin/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+
+    const data: LoginResponse = await res.json();
+    if (!res.ok || !data.success) {
+      throw new Error(data.message || 'Tuition Operations Admin login failed');
+    }
+
+    if (data.token && data.user) {
+      this.setSession(data.token, data.user);
+    }
+    return data;
+  },
+
   async loginAdmin(username: string, password: string): Promise<LoginResponse> {
     const res = await fetch(`${API_BASE_URL}/api/auth/admin/login`, {
       method: 'POST',
@@ -106,7 +124,25 @@ export const authService = {
 
     const data: LoginResponse = await res.json();
     if (!res.ok || !data.success) {
-      throw new Error(data.message || 'Admin/Staff login failed');
+      throw new Error(data.message || 'Administrator login failed');
+    }
+
+    if (data.token && data.user) {
+      this.setSession(data.token, data.user);
+    }
+    return data;
+  },
+
+  async loginStaff(username: string, password: string): Promise<LoginResponse> {
+    const res = await fetch(`${API_BASE_URL}/api/auth/staff/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+
+    const data: LoginResponse = await res.json();
+    if (!res.ok || !data.success) {
+      throw new Error(data.message || 'Staff login failed');
     }
 
     if (data.token && data.user) {

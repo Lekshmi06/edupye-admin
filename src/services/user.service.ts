@@ -70,7 +70,7 @@ export const userService = {
     username: string;
     displayName: string;
     email: string;
-    role: 'Admin' | 'Staff';
+    role: 'Super Admin' | 'Admin' | 'Tuition Operations Admin' | 'Staff' | string;
     department?: string;
     password: string;
     allowedModules?: number[];

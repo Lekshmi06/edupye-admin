@@ -91,7 +91,8 @@ export const UserManagementPage: React.FC<UserManagementPageProps> = ({
   // Tab filtering: 'admins' shows Admin accounts; 'staff' shows Staff accounts
   const displayedUsers = useMemo(() => {
     return users.filter((u) => {
-      const isUserAdmin = u.role === 'Admin' || u.role === 'ADMIN';
+      const r = (u.role || '').toLowerCase();
+      const isUserAdmin = r.includes('admin');
       if (activeTab === 'admins') {
         return isUserAdmin;
       }
@@ -332,7 +333,7 @@ export const UserManagementPage: React.FC<UserManagementPageProps> = ({
               fontWeight: 600,
             }}
           >
-            {users.filter((u) => u.role !== 'Admin' && u.role !== 'ADMIN').length}
+            {users.filter((u) => !(u.role || '').toLowerCase().includes('admin')).length}
           </span>
         </button>
 

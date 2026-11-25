@@ -32,6 +32,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   const isStaffAccount = (isSuperAdmin ? role : user.role) === 'Staff' || (user.role !== 'Admin' && user.role !== 'Super Admin');
+  const canDelegateModules = isSuperAdmin || isStaffAccount;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +45,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
         email: email.trim().toLowerCase(),
         department: department.trim(),
         role: isSuperAdmin ? role : undefined,
-        allowedModules: isStaffAccount ? allowedModules : undefined,
+        allowedModules: canDelegateModules ? allowedModules : undefined,
       });
 
       onUserUpdated(updated);
@@ -200,7 +201,14 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
               </label>
               <select
                 value={role}
-                onChange={(e) => setRole(e.target.value)}
+                onChange={(e) => {
+                  const newRole = e.target.value;
+                  setRole(newRole);
+                  if (newRole === 'Tuition Operations Admin') {
+                    setDepartment('Tuition Operations');
+                    setAllowedModules([1, 2, 3, 4, 5, 33]);
+                  }
+                }}
                 style={{
                   width: '100%',
                   padding: '9px 12px',
@@ -213,14 +221,15 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
                 }}
               >
                 <option value="Admin">Administrator</option>
+                <option value="Tuition Operations Admin">Tuition Operations Admin</option>
                 <option value="Staff">Staff Member</option>
                 <option value="Super Admin">Super Administrator</option>
               </select>
             </div>
           )}
 
-          {/* Module Access Management for Staff */}
-          {isStaffAccount && (
+          {/* Module Access Management / Delegation */}
+          {canDelegateModules && (
             <div style={{ marginBottom: '18px' }}>
               <ModuleAccessSelector
                 isSuperAdmin={isSuperAdmin}

@@ -103,7 +103,7 @@ export const ExploreOpportunitiesView: React.FC = () => {
               </h3>
             </div>
             <p style={{ margin: '4px 0 0', fontSize: 13, color: '#64748b' }}>
-              Handpicked opportunities from top companies on LetGetIn
+              Handpicked opportunities from top companies on EduPye
             </p>
           </div>
 

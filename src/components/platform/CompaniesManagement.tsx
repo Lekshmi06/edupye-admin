@@ -264,7 +264,7 @@ export function CompaniesManagement() {
                 Companies
               </h1>
               <p style={{ margin: '4px 0 0 0', fontSize: 13, color: '#93c5fd' }}>
-                Manage all enterprise, corporate, and hiring partner company accounts on LetGetIn.
+                Manage all enterprise, corporate, and hiring partner company accounts on EduPye.
               </p>
             </div>
           </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { DashboardTab } from './DashboardTab';
+import { EdupyeSalesRevenueTab } from './EdupyeSalesRevenueTab';
 import { SalesInvoices } from './SalesInvoices';
 import { SalesQuotes } from './SalesQuotes';
 import { SalesPayments } from './SalesPayments';
@@ -22,7 +23,7 @@ import { ImportWizard } from './ImportWizard';
 import { PrintTemplates } from './PrintTemplates';
 import { AccountingSettings } from './AccountingSettings';
 
-type MainTab = 'dashboard' | 'sales' | 'purchases' | 'common' | 'reports' | 'gst' | 'setup';
+type MainTab = 'dashboard' | 'edupye' | 'sales' | 'purchases' | 'common' | 'reports' | 'gst' | 'setup';
 
 export const AcmasoModule: React.FC = () => {
   const [mainTab, setMainTab] = useState<MainTab>('dashboard');
@@ -106,6 +107,7 @@ export const AcmasoModule: React.FC = () => {
       }}>
         {[
           { id: 'dashboard', label: 'Dashboard', icon: 'fa-chart-pie' },
+          { id: 'edupye', label: 'EduPye Sales & Revenue', icon: 'fa-graduation-cap' },
           { id: 'sales', label: 'Sales', icon: 'fa-file-invoice' },
           { id: 'purchases', label: 'Purchases', icon: 'fa-cart-shopping' },
           { id: 'common', label: 'Common', icon: 'fa-book-journal-whills' },
@@ -431,6 +433,7 @@ export const AcmasoModule: React.FC = () => {
       {/* Active Tab View */}
       <div>
         {mainTab === 'dashboard' && <DashboardTab />}
+        {mainTab === 'edupye' && <EdupyeSalesRevenueTab />}
 
         {mainTab === 'sales' && salesSubTab === 'invoices' && <SalesInvoices />}
         {mainTab === 'sales' && salesSubTab === 'quotes' && <SalesQuotes />}

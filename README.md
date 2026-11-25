@@ -40,3 +40,4 @@ npm run preview   # preview the production build
   notification system (`useToast`).
 - Font Awesome is now an npm dependency (`@fortawesome/fontawesome-free`)
   instead of a CDN stylesheet.
+"# edupye-admin" 

@@ -316,6 +316,18 @@ export interface AcademyEnquiryItem {
   notes?: string;
   followUpDate?: string;
   session: string;
+  // Demo Trial Meeting Room Fields
+  demoRoomId?: string;
+  studentToken?: string;
+  teacherToken?: string;
+  assignedTutorId?: string;
+  assignedTutorCode?: string;
+  assignedTutorName?: string;
+  demoSubject?: string;
+  demoScheduledAt?: string;
+  demoStatus?: 'scheduled' | 'live' | 'completed' | 'cancelled';
+  teacherFeedback?: string;
+  studentDecision?: string;
   createdAt: string;
 }
 
@@ -1260,5 +1272,42 @@ export const tuitionAdminService = {
       throw new Error(data.message || 'Failed to update enquiry');
     }
     return data.enquiry;
+  },
+
+  async scheduleDemo(id: string, payload: {
+    tutorId?: string;
+    tutorCode?: string;
+    tutorName?: string;
+    subject: string;
+    scheduledAt: string;
+    notes?: string;
+  }): Promise<{
+    success: boolean;
+    message: string;
+    enquiry: AcademyEnquiryItem;
+    demoDetails: {
+      demoRoomId: string;
+      studentToken: string;
+      teacherToken: string;
+      studentLink: string;
+      teacherLink: string;
+      studentJoinUrl: string;
+      teacherJoinUrl: string;
+      assignedTutor: { id?: string; code?: string; name?: string };
+      subject: string;
+      scheduledAt: string;
+      status: string;
+    };
+  }> {
+    const res = await fetch(`${API_BASE_URL}/api/admin/academy/enquiries/${id}/schedule-demo`, {
+      method: 'POST',
+      headers: authService.getAuthHeaders(),
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      throw new Error(data.message || 'Failed to schedule demo trial class');
+    }
+    return data;
   },
 };
